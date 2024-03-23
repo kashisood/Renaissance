@@ -20,4 +20,23 @@ public class FakePersonDAO implements IPersonDao{
         return 1;
     }
 
+    @Override
+    public List<Person> getAllPeople() {
+        return mockDataBase;
+    }
+
+    @Override
+    public Boolean deletePerson(UUID id) {
+      // dummy impl code.. todo fix
+        mockDataBase.remove(id);
+        return true;
+    }
+
+    @Override
+    public Boolean updatePersonByID(UUID id, Person person) {
+       //dummy impl - update logic
+        mockDataBase.add(new Person(id, person.getName()));
+        return null;
+    }
+
 }

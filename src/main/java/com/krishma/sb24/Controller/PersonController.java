@@ -3,10 +3,10 @@ package com.krishma.sb24.Controller;
 import com.krishma.sb24.model.Person;
 import com.krishma.sb24.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 //since this is a controller class.. or API front end class or RET API controller, it must be defined as RESTController
 @RequestMapping("api/v1/person")
@@ -29,4 +29,24 @@ public class PersonController {
     {
         personService.addPerson(person);
     }
+
+    @GetMapping
+    public List<Person> personList()
+    {
+        return personService.getAllPeople();
+    }
+
+    @DeleteMapping
+    public Boolean deletePerson(@RequestBody UUID id)
+    {
+        return personService.deletePerson(id);
+    }
+
+    @PutMapping
+    public Boolean updatePerson(@RequestBody UUID id, Person person)
+    {
+        return personService.updatePersonByID(id, person);
+    }
+
+
 }
