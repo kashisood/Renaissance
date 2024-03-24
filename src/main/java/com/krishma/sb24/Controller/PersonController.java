@@ -5,6 +5,9 @@ import com.krishma.sb24.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +28,7 @@ public class PersonController {
     // so we define which method to be called based on the HTTP type. this method will be exposed to the client as endpoint
     // get - retrieve data, post - add resource to server , put- modifying , delete - deleting
     @PostMapping
-    public void addPerson(@RequestBody Person person)
+    public void addPerson(@Valid @NotNull@RequestBody Person person)
     {
         personService.addPerson(person);
     }
@@ -36,16 +39,21 @@ public class PersonController {
         return personService.getAllPeople();
     }
 
-    @DeleteMapping
-    public Boolean deletePerson(@RequestBody UUID id)
+    @DeleteMapping(path = "{id}")
+    public Boolean deletePerson(@PathVariable("id") UUID id)
     {
         return personService.deletePerson(id);
     }
 
-    @PutMapping
-    public Boolean updatePerson(@RequestBody UUID id, Person person)
+    @PutMapping(path = "{id}")
+    public Boolean updatePerson(@PathVariable("id") UUID id, @Valid @NotNull @RequestBody Person person)
     {
         return personService.updatePersonByID(id, person);
+    }
+    @GetMapping(path = "{id}")
+    public Person getPersonById (@PathVariable("id") UUID id)
+    {
+        return personService.selectPersonByID(id).orElse(null);
     }
 
 

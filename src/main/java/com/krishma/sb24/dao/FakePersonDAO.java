@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 // This annotation tells Spring that this class needs to be instantiated as a bean so that it can be injected in other classes
@@ -27,16 +28,42 @@ public class FakePersonDAO implements IPersonDao{
 
     @Override
     public Boolean deletePerson(UUID id) {
-      // dummy impl code.. todo fix
-        mockDataBase.remove(id);
+        Optional<Person> person = selectPersonById(id);
+        if(person.isEmpty())
+        {
+            return false;
+        }
+        else {
+            mockDataBase.remove(person.get());
+        }
         return true;
     }
 
     @Override
     public Boolean updatePersonByID(UUID id, Person person) {
-       //dummy impl - update logic
-        mockDataBase.add(new Person(id, person.getName()));
-        return null;
+
+        Optional<Person> personOld = selectPersonById(id);
+       /* if(personOld.isEmpty()) {
+            mockDataBase.add(new Person(id, person.getName()));
+        } else {
+            mockDataBase.remove(personOld.get());
+            mockDataBase.add(person);
+        }*/
+
+
+            int delIndex = mockDataBase.indexOf(personOld.get());
+            if(delIndex >= 0) {
+                Person pNew = new Person(personOld.get().getId() , person.getName());
+                mockDataBase.set(delIndex, pNew);
+                return true;
+             }
+        return false;
+    }
+
+    @Override
+    public Optional<Person> selectPersonById(UUID id) {
+        //We will search if the ID exists in our database by Streaming our database
+        return mockDataBase.stream().filter(person -> person.getId().equals(id)).findFirst();
     }
 
 }
