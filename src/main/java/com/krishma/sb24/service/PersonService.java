@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 // This annotation tells Spring that this class needs to be instantiated as a bean so that it can be injected in other classes
@@ -23,4 +26,22 @@ public class PersonService {
     public int addPerson(Person person) {
             return personDao.insertPerson(person);
     }
+
+    public List<Person> getAllPeople() {
+        return personDao.getAllPeople();
+    }
+
+    public Boolean deletePerson(UUID id) {
+        return personDao.deletePerson(id);
+    }
+
+    public Boolean updatePersonByID(UUID id, Person person) {
+        return personDao.updatePersonByID(id, person);
+    }
+
+    public Optional<Person> selectPersonByID (UUID id)
+    {
+        return personDao.selectPersonById(id);
+    }
+
 }
